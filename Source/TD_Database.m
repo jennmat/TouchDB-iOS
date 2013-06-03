@@ -188,7 +188,8 @@ static BOOL removeItemIfExists(NSString* path, NSError** outError) {
                 view_id INTEGER PRIMARY KEY, \
                 name TEXT UNIQUE NOT NULL,\
                 version TEXT, \
-                lastsequence INTEGER DEFAULT 0); \
+                lastsequence INTEGER DEFAULT 0, \
+                etag TEXT); \
             CREATE INDEX views_by_name ON views(name); \
             CREATE TABLE maps ( \
                 view_id INTEGER NOT NULL REFERENCES views(view_id) ON DELETE CASCADE, \
