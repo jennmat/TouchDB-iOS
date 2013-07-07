@@ -359,9 +359,8 @@
 		27F1E4A61697995C00F0E50F /* TDJSViewCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F1E4A51697995C00F0E50F /* TDJSViewCompiler.m */; };
 		27F1E4A8169799DA00F0E50F /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F1E4A7169799DA00F0E50F /* JavaScriptCore.framework */; };
 		27F1E4AB16979A0B00F0E50F /* TDJSViewCompiler_Test.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F1E4AA16979A0B00F0E50F /* TDJSViewCompiler_Test.m */; };
-		3F9FBD60175D3D09005FB10E /* TD_LazyView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3F9FBD5E175D3D09005FB10E /* TD_LazyView.h */; };
-		3F9FBD61175D3D09005FB10E /* TD_LazyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F9FBD5F175D3D09005FB10E /* TD_LazyView.m */; };
-		3F9FBD63175D41B5005FB10E /* CouchCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F9FBD62175D41B5005FB10E /* CouchCocoa.framework */; };
+		3F9FBD60175D3D09005FB10E /* TD_RemoteView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3F9FBD5E175D3D09005FB10E /* TD_RemoteView.h */; };
+		3F9FBD61175D3D09005FB10E /* TD_RemoteView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F9FBD5F175D3D09005FB10E /* TD_RemoteView.m */; };
 		DA023B4614BCA94C008184BB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F0745C11CD50A600E9A2AB /* Foundation.framework */; };
 		DA147C0C14BCA98A0052DA4D /* TDListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 275315DF14ACF0A20065964D /* TDListener.m */; };
 		DA147C0D14BCA98A0052DA4D /* TDHTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 2753160B14ACFC2A0065964D /* TDHTTPConnection.m */; };
@@ -803,9 +802,8 @@
 		27F1E4AA16979A0B00F0E50F /* TDJSViewCompiler_Test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDJSViewCompiler_Test.m; path = ../Source/TDJSViewCompiler_Test.m; sourceTree = "<group>"; };
 		27F87BE61558890600F0A416 /* TDGNUstep.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TDGNUstep.h; sourceTree = "<group>"; };
 		27F87BE71558890700F0A416 /* TDGNUstep.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TDGNUstep.m; sourceTree = "<group>"; };
-		3F9FBD5E175D3D09005FB10E /* TD_LazyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TD_LazyView.h; sourceTree = "<group>"; };
-		3F9FBD5F175D3D09005FB10E /* TD_LazyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TD_LazyView.m; sourceTree = "<group>"; };
-		3F9FBD62175D41B5005FB10E /* CouchCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CouchCocoa.framework; path = "../../../../Downloads/CouchCocoa-1.001/iOS/CouchCocoa.framework"; sourceTree = "<group>"; };
+		3F9FBD5E175D3D09005FB10E /* TD_RemoteView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TD_RemoteView.h; sourceTree = "<group>"; };
+		3F9FBD5F175D3D09005FB10E /* TD_RemoteView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TD_RemoteView.m; sourceTree = "<group>"; };
 		8DD76F6C0486A84900D96B5E /* TouchDB */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TouchDB; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA023B6414BCA94C008184BB /* libTouchDBListener.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTouchDBListener.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA147C3614BCAC3B0052DA4D /* TouchDBListener.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TouchDBListener.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -916,7 +914,6 @@
 				27B0B80E1492C16300A817AD /* Foundation.framework in Frameworks */,
 				27B0B8101492C16300A817AD /* CoreGraphics.framework in Frameworks */,
 				27731F321496767100815D67 /* CouchCocoa.framework in Frameworks */,
-				3F9FBD63175D41B5005FB10E /* CouchCocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1039,8 +1036,8 @@
 				27C706411486BBD500F0F099 /* TD_Server.m */,
 				27731EFD1493FA3100815D67 /* TDBlobStore.h */,
 				27731EFE1493FA3100815D67 /* TDBlobStore.m */,
-				3F9FBD5E175D3D09005FB10E /* TD_LazyView.h */,
-				3F9FBD5F175D3D09005FB10E /* TD_LazyView.m */,
+				3F9FBD5E175D3D09005FB10E /* TD_RemoteView.h */,
+				3F9FBD5F175D3D09005FB10E /* TD_RemoteView.m */,
 			);
 			name = Database;
 			sourceTree = "<group>";
@@ -1280,7 +1277,6 @@
 		27B0B8111492C16300A817AD /* Demo-iOS */ = {
 			isa = PBXGroup;
 			children = (
-				3F9FBD62175D41B5005FB10E /* CouchCocoa.framework */,
 				27B0B81A1492C16300A817AD /* DemoAppDelegate.h */,
 				27B0B81B1492C16300A817AD /* DemoAppDelegate.m */,
 				27731F3314967A5F00815D67 /* RootViewController.h */,
@@ -1551,7 +1547,7 @@
 				27ED9AA1163B01D5000C844A /* TDSocketChangeTracker.h in Headers */,
 				2776A538169F4C41006FF199 /* TDBrowserIDAuthorizer.h in Headers */,
 				2776A5D516A61FD6006FF199 /* TDPersonaAuthorizer.h in Headers */,
-				3F9FBD60175D3D09005FB10E /* TD_LazyView.h in Headers */,
+				3F9FBD60175D3D09005FB10E /* TD_RemoteView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2101,7 +2097,7 @@
 				27F128B9156AC8F0008465C2 /* OAMutableURLRequest.m in Sources */,
 				270F5702156AD215000FEB8F /* OARequestParameter.m in Sources */,
 				2776A5D616A61FD6006FF199 /* TDPersonaAuthorizer.m in Sources */,
-				3F9FBD61175D3D09005FB10E /* TD_LazyView.m in Sources */,
+				3F9FBD61175D3D09005FB10E /* TD_RemoteView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

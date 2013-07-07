@@ -2,7 +2,7 @@
 //  DemoAppController.m
 //  CouchCocoa
 //
-//  Created by Jens Alfke on 6/1/11.
+//  cd by Jens Alfke on 6/1/11.
 //  Copyright (c) 2011 Couchbase, Inc, Inc.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file

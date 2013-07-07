@@ -8,6 +8,6 @@
 
 #import <TouchDB/TouchDB.h>
 
-@interface TD_LazyView : TD_View
+@interface TD_RemoteView : TD_View
 
 @end
