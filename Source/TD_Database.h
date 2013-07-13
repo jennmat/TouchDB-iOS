@@ -9,7 +9,8 @@
 
 #import <TouchDB/TD_Revision.h>
 #import <TouchDB/TDStatus.h>
-@class FMDatabase, TD_View, TDBlobStore;
+
+@class FMDatabase, TD_View, TDBlobStore, TD_RemoteView;
 struct TDQueryOptions;      // declared in TD_View.h
 
 
@@ -98,7 +99,6 @@ extern const TDChangesOptions kDefaultTDChangesOptions;
 @property (readonly, copy) NSString* name;
 @property (readonly) BOOL exists;
 @property (readonly) UInt64 totalDataSize;
-
 @property (readonly) NSUInteger documentCount;
 @property (readonly) SequenceNumber lastSequence;
 @property (readonly) NSString* privateUUID;
@@ -158,6 +158,9 @@ extern const TDChangesOptions kDefaultTDChangesOptions;
                          options: (const struct TDQueryOptions*)options;
 
 - (TD_View*) viewNamed: (NSString*)name;
+
+- (TD_RemoteView*) remoteViewNamed: (NSString*) name withRemoteHost:(NSString*)host withRemoteDB:(NSString*)remoteDB withRemoteDDoc:(NSString*)ddoc withRemoteView:(NSString*)view;
+
 
 - (TD_View*) existingViewNamed: (NSString*)name;
 

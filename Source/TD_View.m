@@ -70,6 +70,25 @@ static id<TDViewCompiler> sCompiler;
     return [_db.fmdb longLongForQuery: @"SELECT lastSequence FROM views WHERE name=?", _name];
 }
 
+-(BOOL) updateViewToVersion:(NSString*)version {
+    if (![_db open])
+        return NO;
+    
+    // Update the version column in the db. This is a little weird looking because we want to
+    // avoid modifying the db if the version didn't change, and because the row might not exist yet.
+    FMDatabase* fmdb = _db.fmdb;
+    if (![fmdb executeUpdate: @"INSERT OR IGNORE INTO views (name, version) VALUES (?, ?)",
+          _name, version])
+        return NO;
+    if (fmdb.changes)
+        return YES;     // created new view
+    if (![fmdb executeUpdate: @"UPDATE views SET version=?, lastSequence=0 "
+          "WHERE name=? AND version!=?",
+          version, _name, version])
+        return NO;
+    return (fmdb.changes > 0);
+
+}
 
 - (BOOL) setMapBlock: (TDMapBlock)mapBlock
          reduceBlock: (TDReduceBlock)reduceBlock
@@ -80,22 +99,7 @@ static id<TDViewCompiler> sCompiler;
     _mapBlock = mapBlock; // copied implicitly in ARC
     _reduceBlock = reduceBlock; // copied implicitly in ARC
     
-    if (![_db open])
-        return NO;
-
-    // Update the version column in the db. This is a little weird looking because we want to
-    // avoid modifying the db if the version didn't change, and because the row might not exist yet.
-    FMDatabase* fmdb = _db.fmdb;
-    if (![fmdb executeUpdate: @"INSERT OR IGNORE INTO views (name, version) VALUES (?, ?)", 
-                              _name, version])
-        return NO;
-    if (fmdb.changes)
-        return YES;     // created new view
-    if (![fmdb executeUpdate: @"UPDATE views SET version=?, lastSequence=0 "
-                               "WHERE name=? AND version!=?", 
-                              version, _name, version])
-        return NO;
-    return (fmdb.changes > 0);
+    return [self updateViewToVersion:version];
 }
 
 
@@ -232,6 +236,7 @@ static id fromJSON( NSData* json ) {
         TDMapEmitBlock emit = ^(id key, id value) {
             if (!key)
                 key = $null;
+            sequence = 1;
             NSString* keyJSON = toJSONString(key);
             NSString* valueJSON = toJSONString(value);
             LogTo(View, @"    emit(%@, %@)", keyJSON, valueJSON);

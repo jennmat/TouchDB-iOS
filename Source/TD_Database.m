@@ -22,6 +22,7 @@
 #import "TDPuller.h"
 #import "TDPusher.h"
 #import "TDMisc.h"
+#import "TD_RemoteView.h"
 
 #import "FMDatabase.h"
 #import "FMDatabaseAdditions.h"
@@ -894,6 +895,19 @@ const TDChangesOptions kDefaultTDChangesOptions = {UINT_MAX, 0, NO, NO, YES};
     if (!view.viewID)
         return nil;
     return [self registerView: view];
+}
+
+
+- (TD_RemoteView*) remoteViewNamed: (NSString*) name withRemoteHost:(NSString*)host withRemoteDB:(NSString*)remoteDB withRemoteDDoc:(NSString*)ddoc withRemoteView:(NSString*)remoteView
+{
+
+    TD_RemoteView* view = (TD_RemoteView*)_views[name];
+    if( view ){
+        return view;
+    }
+    view = [[TD_RemoteView alloc] initWithDatabase:self name:name withRemoteHost:host withRemoteDatabase:remoteDB withRemoteDDoc:ddoc withRemoteView:remoteView];
+    
+    return (TD_RemoteView *)[self registerView:view];
 }
 
 

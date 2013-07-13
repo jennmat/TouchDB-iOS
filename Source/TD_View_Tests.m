@@ -14,6 +14,7 @@
 //  and limitations under the License.
 
 #import "TD_View.h"
+#import "TD_RemoteView.h"
 #import "TD_Database+Insertion.h"
 #import "TDInternal.h"
 #import "Test.h"
@@ -673,6 +674,8 @@ TestCase(TD_View_LinkedDocs) {
                                          {@"doc", docs[2]}));
     CAssertEqual(rows, expectedRows);
 }
+
+
 
 
 TestCase(TD_View) {

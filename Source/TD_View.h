@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <TouchDB/TD_Database.h>
+#import <TouchDB/TouchDB.h>
 
 
 typedef void (^TDMapEmitBlock)(id key, id value);
@@ -63,7 +63,7 @@ typedef enum {
 /** Represents a view available in a database. */
 @interface TD_View : NSObject
 {
-    @private
+    @protected
     TD_Database* __weak _db;
     NSString* _name;
     int _viewID;
@@ -99,6 +99,12 @@ typedef enum {
 /** Updates the view's index (incrementally) if necessary.
     @return  200 if updated, 304 if already up-to-date, else an error code */
 - (TDStatus) updateIndex;
+- (int) viewID;
+
+
+- (id) initWithDatabase: (TD_Database*)db name: (NSString*)name;
+
+-(BOOL) updateViewToVersion:(NSString*)version;
 
 @property (readonly) SequenceNumber lastSequenceIndexed;
 
@@ -115,3 +121,7 @@ typedef enum {
 + (id<TDViewCompiler>) compiler;
 
 @end
+
+
+
+

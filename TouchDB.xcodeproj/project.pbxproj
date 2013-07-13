@@ -278,7 +278,6 @@
 		27B0B8181492C16300A817AD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B0B8171492C16300A817AD /* main.m */; };
 		27B0B81C1492C16300A817AD /* DemoAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B0B81B1492C16300A817AD /* DemoAppDelegate.m */; };
 		27B0B82D1492C4DB00A817AD /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B0B7F81492BC8000A817AD /* libsqlite3.dylib */; };
-		27B0B8531492CBE400A817AD /* libTouchDB.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B0B7A91492B83B00A817AD /* libTouchDB.a */; };
 		27B0B8541492D09B00A817AD /* TDRouter_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C7064A1488311100F0F099 /* TDRouter_Tests.m */; };
 		27B0B8551492D0A000A817AD /* TD_View_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B0B77F1491E73400A817AD /* TD_View_Tests.m */; };
 		27B0B8561492D0A400A817AD /* TD_Database_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 27821BB9148FF56C0099B373 /* TD_Database_Tests.m */; };
@@ -359,6 +358,10 @@
 		27F1E4A61697995C00F0E50F /* TDJSViewCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F1E4A51697995C00F0E50F /* TDJSViewCompiler.m */; };
 		27F1E4A8169799DA00F0E50F /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F1E4A7169799DA00F0E50F /* JavaScriptCore.framework */; };
 		27F1E4AB16979A0B00F0E50F /* TDJSViewCompiler_Test.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F1E4AA16979A0B00F0E50F /* TDJSViewCompiler_Test.m */; };
+		3F64A1A31788FDFD002F0E6C /* TD_RemoteView.h in Sources */ = {isa = PBXBuildFile; fileRef = 3F9FBD5E175D3D09005FB10E /* TD_RemoteView.h */; };
+		3F64A1A41788FE6C002F0E6C /* TD_RemoteView.m in Headers */ = {isa = PBXBuildFile; fileRef = 3F9FBD5F175D3D09005FB10E /* TD_RemoteView.m */; };
+		3F64A56D178904CD002F0E6C /* TD_RemoteView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F9FBD5F175D3D09005FB10E /* TD_RemoteView.m */; };
+		3F64A56E178904D8002F0E6C /* libTouchDB.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B0B7A91492B83B00A817AD /* libTouchDB.a */; };
 		3F9FBD60175D3D09005FB10E /* TD_RemoteView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3F9FBD5E175D3D09005FB10E /* TD_RemoteView.h */; };
 		3F9FBD61175D3D09005FB10E /* TD_RemoteView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F9FBD5F175D3D09005FB10E /* TD_RemoteView.m */; };
 		DA023B4614BCA94C008184BB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F0745C11CD50A600E9A2AB /* Foundation.framework */; };
@@ -904,11 +907,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F64A56E178904D8002F0E6C /* libTouchDB.a in Frameworks */,
 				27D90B1A15601F8C0000735E /* Security.framework in Frameworks */,
 				27E7FAF0155D8EBA0025F93A /* CFNetwork.framework in Frameworks */,
 				27E00C8E14EC2C74004BCBA9 /* SystemConfiguration.framework in Frameworks */,
 				27DB90DF14DB4B0100FC7118 /* libz.dylib in Frameworks */,
-				27B0B8531492CBE400A817AD /* libTouchDB.a in Frameworks */,
 				27B0B82D1492C4DB00A817AD /* libsqlite3.dylib in Frameworks */,
 				27B0B80D1492C16300A817AD /* UIKit.framework in Frameworks */,
 				27B0B80E1492C16300A817AD /* Foundation.framework in Frameworks */,
@@ -1493,6 +1496,7 @@
 				27821BBE14906FB60099B373 /* TouchDBPrefix.h in Headers */,
 				279EB2D11491442500E74185 /* TDInternal.h in Headers */,
 				279EB2DB1491C34300E74185 /* TDCollateJSON.h in Headers */,
+				3F64A1A41788FE6C002F0E6C /* TD_RemoteView.m in Headers */,
 				27B0B796149290AB00A817AD /* TDChangeTracker.h in Headers */,
 				27B0B79E1492932800A817AD /* TDBase64.h in Headers */,
 				27731EFF1493FA3100815D67 /* TDBlobStore.h in Headers */,
@@ -2032,6 +2036,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F64A1A31788FDFD002F0E6C /* TD_RemoteView.h in Sources */,
 				270B3E111489382F00E0A926 /* TD_Database.m in Sources */,
 				270B3E121489382F00E0A926 /* TD_Body.m in Sources */,
 				270B3E131489382F00E0A926 /* TD_Server.m in Sources */,
@@ -2158,6 +2163,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F64A56D178904CD002F0E6C /* TD_RemoteView.m in Sources */,
 				27B0B7CD1492B86C00A817AD /* TD_Database.m in Sources */,
 				27B0B7CE1492B86F00A817AD /* TD_View.m in Sources */,
 				27B0B7CF1492B87200A817AD /* TD_Body.m in Sources */,
@@ -2960,6 +2966,10 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				INFOPLIST_FILE = "Demo-iOS/iOS Demo-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/build/TouchDB.build/Debug-iphoneos/iOS Library.build/Objects-normal/armv7\"",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "TouchDB Demo";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -2990,6 +3000,10 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				INFOPLIST_FILE = "Demo-iOS/iOS Demo-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/build/TouchDB.build/Debug-iphoneos/iOS Library.build/Objects-normal/armv7\"",
+				);
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "TouchDB Demo";
