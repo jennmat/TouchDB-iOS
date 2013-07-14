@@ -208,14 +208,16 @@ static int findCommonAncestor(TD_Revision* rev, NSArray* possibleIDs);
     // <http://wiki.apache.org/couchdb/HttpPostRevsDiff>
     NSMutableDictionary* diffs = $mdict();
     for (TD_Revision* rev in changes) {
-        NSString* docID = rev.docID;
-        NSMutableArray* revs = diffs[docID];
-        if (!revs) {
-            revs = $marray();
-            diffs[docID] = revs;
+        if ( [rev isStubRevision] == NO ){
+            NSString* docID = rev.docID;
+            NSMutableArray* revs = diffs[docID];
+            if (!revs) {
+                revs = $marray();
+                diffs[docID] = revs;
+            }
+            [revs addObject: rev.revID];
+            [self addPending: rev];
         }
-        [revs addObject: rev.revID];
-        [self addPending: rev];
     }
     
     // Call _revs_diff on the target db:

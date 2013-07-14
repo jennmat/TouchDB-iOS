@@ -33,6 +33,8 @@ typedef SInt64 SequenceNumber;
 
 + (TD_Revision*) revisionWithProperties: (NSDictionary*)properties;
 
+-(BOOL) isStubRevision;
+
 @property (readonly) NSString* docID;
 @property (readonly) NSString* revID;
 @property (readonly) bool deleted;

@@ -8,8 +8,8 @@
 
 #import "TD_RemoteView.h"
 #import "TDRemoteRequest.h"
-
-
+#import "TD_Body.h"
+#import "TD_Database+Insertion.h"
 #import "FMDatabase.h"
 #import "FMDatabaseAdditions.h"
 #import "FMResultSet.h"
@@ -119,9 +119,14 @@ static NSString* toJSONString( id object ) {
             int totalResults = (int)[results objectForKey:@"total_rows"];
             
             FMResultSet* maxrs = [fmdb executeQuery:@"SELECT MAX(doc_id) FROM docs"];
-            SInt64 nextdocid = 0;
+            SInt64 nextdocid = 1;
             if ( [maxrs next] ){
                 nextdocid = [maxrs longLongIntForColumnIndex:0];
+            }
+            
+            if ( nextdocid == 0 ){
+                /* Can't be 0, let's start at 1 */
+                nextdocid = 1;
             }
             
             if ( totalResults > 0 ){
@@ -150,7 +155,7 @@ static NSString* toJSONString( id object ) {
                         if ( rc == NO ){
                             NSLog(@"%@", [fmdb lastErrorMessage]);
                         }
-                        rc = [fmdb executeUpdate:@"INSERT INTO revs (doc_id, revid) values (?, ?)", @(nextdocid), @"STUB"];
+                        rc = [fmdb executeUpdate:@"INSERT INTO revs (doc_id, revid, current) values (?, ?, 1)", @(nextdocid), @"STUB"];
                         if ( rc == NO ){
                             NSLog(@"%@", [fmdb lastErrorMessage]);
                         }
@@ -158,7 +163,7 @@ static NSString* toJSONString( id object ) {
                         
                         nextdocid++;
                     } else {
-                        [db get]
+                        //[db get]
                        // sequence = [db getSequenceOfDocument:self<#(SInt64)#> revision:<#(NSString *)#> onlyCurrent:<#(BOOL)#>]
                     }
                     
@@ -198,6 +203,7 @@ static NSString* toJSONString( id object ) {
     return kTDStatusOK;
 }
 
+@class TD_Body;
 
 TestCase(TD_RemoteView_Create){
     
@@ -206,8 +212,55 @@ TestCase(TD_RemoteView_Create){
     TD_RemoteView* rv = [db remoteViewNamed:@"properties-by-address" withRemoteHost:@"localhost:5984" withRemoteDB:@"properties" withRemoteDDoc:@"properties" withRemoteView:@"by-address"];
     
     [rv updateIndex];
+
+    TDStatus s;
+    
+    const TDQueryOptions options = {
+        .limit = 25
+        // everything else will default to nil/0/NO
+    };
+
+    
+    NSArray* arr = [rv queryWithOptions:&options status:&s];
+    
+    for(NSDictionary* dict in arr ){
+        NSLog(@"Key:%@", [dict objectForKey:@"key"]);
+    
+        NSString * docId = [dict objectForKey:@"id"];
+        
+        TD_Revision* readRev = [db getDocumentWithID:docId revisionID:nil];
+        TDStatus status;
+        
+        NSMutableDictionary* props = [readRev.properties mutableCopy];
+        props[@"status"] = @"updated!";
+        TD_Body* doc = [TD_Body bodyWithProperties: props];
+        TD_Revision* rev2 = [[TD_Revision alloc] initWithBody: doc];
+        //TD_Revision* rev2Input = rev2;
+        
+        rev2 = [db putRevision: rev2 prevRevisionID: readRev.revID allowConflict: NO status: &status];
+    
+        
+    }
+    
+    
+    NSURL* remote = [NSURL URLWithString: @"http://localhost:5984/properties"];
+    TDReplicator* repl = [[TDReplicator alloc] initWithDB: db remote: remote
+                                                     push: YES continuous: NO];
+    [repl start];
+    
+    CAssert(repl.running);
+    Log(@"Waiting for replicator to finish...");
+    while (repl.running || repl.savingCheckpoint) {
+        if (![[NSRunLoop currentRunLoop] runMode: NSDefaultRunLoopMode
+                                      beforeDate: [NSDate dateWithTimeIntervalSinceNow: 0.5]])
+            break;
+    }
+    
+    
+    
     
 }
+
 
 
 @end

@@ -56,6 +56,13 @@
     return [self initWithBody: body];
 }
 
+-(BOOL) isStubRevision {
+    if ( [[self revID] compare:@"STUB"] == 0 ){
+        return YES;
+    }
+    return NO;
+}
+
 + (TD_Revision*) revisionWithProperties: (NSDictionary*)properties {
     return [[self alloc] initWithProperties: properties];
 }

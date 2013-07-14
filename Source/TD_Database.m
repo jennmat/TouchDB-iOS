@@ -27,6 +27,8 @@
 #import "FMDatabase.h"
 #import "FMDatabaseAdditions.h"
 
+#import "TD_Database+Insertion.h"
+
 
 NSString* const TD_DatabaseWillCloseNotification = @"TD_DatabaseWillClose";
 NSString* const TD_DatabaseWillBeDeletedNotification = @"TD_DatabaseWillBeDeleted";
@@ -510,8 +512,36 @@ static BOOL removeItemIfExists(NSString* path, NSError** outError) {
     return docProperties;
 }
 
+- (TD_Revision *) getStubWithNumericId:(SInt64)docNumericId docId:(NSString*)docId sequence:(SequenceNumber) seq {
+    NSMutableURLRequest * req = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/%@/%@", @"http", @"localhost:5984", @"properties", docId]]];
+    
+    [req setValue: @"application/json" forHTTPHeaderField: @"Accept"];
+    
+    NSHTTPURLResponse* response = [NSHTTPURLResponse alloc];
+    NSError* error;
+    
+    NSData* data = [NSURLConnection sendSynchronousRequest:req returningResponse:&response error:&error];
+    //NSString* revId = [[response allHeaderFields] objectForKey:@"ETag"];
+    
+    TDJSON * result = [TDJSON JSONObjectWithData: data options: 0 error: NULL];
+    NSDictionary* doc = $castIf(NSDictionary, result);
+    
+    TD_Revision* rev = [[TD_Revision alloc] initWithProperties:doc];
+    
+    /*
+    TD_Revision * result = [[TD_Revision alloc] initWithDocID: docId revID: revId deleted: NO];
+    [result setSequence:seq];
+    
+    [self expandStoredJSON:data intoRevision:result options:0];
+     */
+     
+    [self forceInsert:rev revisionHistory:nil source:[NSURL URLWithString:@"http://localhost:5984/addresses"]];
+    
+    return rev;
+}
 
-- (TD_Revision*) getDocumentWithID: (NSString*)docID
+
+- (TD_Revision *) getDocumentWithID: (NSString*)docID
                        revisionID: (NSString*)revID
                           options: (TDContentOptions)options
                            status: (TDStatus*)outStatus
@@ -538,6 +568,14 @@ static BOOL removeItemIfExists(NSString* path, NSError** outError) {
     } else {
         if (!revID)
             revID = [r stringForColumnIndex: 0];
+    
+        if ( [revID compare:@"STUB"] == 0 ){
+            /* This is a stub document, meaning it came from a remote view and we haven't fetched it yet */
+            SInt64 docNumericId = [self getDocNumericID:docID];
+            SequenceNumber seq = [r longLongIntForColumnIndex:2];
+            return [self getStubWithNumericId:docNumericId docId:docID sequence:seq];
+        }
+        
         BOOL deleted = [r boolForColumnIndex: 1];
         result = [[TD_Revision alloc] initWithDocID: docID revID: revID deleted: deleted];
         result.sequence = [r longLongIntForColumnIndex: 2];

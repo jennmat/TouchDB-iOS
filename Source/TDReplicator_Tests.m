@@ -256,6 +256,20 @@ TestCase(TDPuller_FromCouchApp) {
     [server close];
 }
 
+TestCase(TDPuller_FromPropertiesDB){
+    RequireTestCase(TDPuller);
+    TD_DatabaseManager* server = [TD_DatabaseManager createEmptyAtTemporaryPath: @"TDPuller_PropertiesDB"];
+    TD_Database* db = [server databaseNamed: @"properties"];
+    [db open];
+    
+    replic8(db, @"http://127.0.0.1:5984/properties", NO, nil);
+    
+    [db close];
+    [server close];
+    
+    
+}
+
 
 static TDReplicator* findActiveReplicator(TD_Database* db, NSURL* remote, BOOL isPush) {
     for (TDReplicator* repl in db.activeReplicators) {
