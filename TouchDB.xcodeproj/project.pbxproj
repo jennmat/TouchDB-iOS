@@ -358,12 +358,15 @@
 		27F1E4A61697995C00F0E50F /* TDJSViewCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F1E4A51697995C00F0E50F /* TDJSViewCompiler.m */; };
 		27F1E4A8169799DA00F0E50F /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F1E4A7169799DA00F0E50F /* JavaScriptCore.framework */; };
 		27F1E4AB16979A0B00F0E50F /* TDJSViewCompiler_Test.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F1E4AA16979A0B00F0E50F /* TDJSViewCompiler_Test.m */; };
-		3F64A1A31788FDFD002F0E6C /* TD_RemoteView.h in Sources */ = {isa = PBXBuildFile; fileRef = 3F9FBD5E175D3D09005FB10E /* TD_RemoteView.h */; };
-		3F64A1A41788FE6C002F0E6C /* TD_RemoteView.m in Headers */ = {isa = PBXBuildFile; fileRef = 3F9FBD5F175D3D09005FB10E /* TD_RemoteView.m */; };
-		3F64A56D178904CD002F0E6C /* TD_RemoteView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F9FBD5F175D3D09005FB10E /* TD_RemoteView.m */; };
+		3F64A1A31788FDFD002F0E6C /* TD_BackedView.h in Sources */ = {isa = PBXBuildFile; fileRef = 3F9FBD5E175D3D09005FB10E /* TD_BackedView.h */; };
+		3F64A1A41788FE6C002F0E6C /* TD_BackedView.m in Headers */ = {isa = PBXBuildFile; fileRef = 3F9FBD5F175D3D09005FB10E /* TD_BackedView.m */; };
+		3F64A56D178904CD002F0E6C /* TD_BackedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F9FBD5F175D3D09005FB10E /* TD_BackedView.m */; };
 		3F64A56E178904D8002F0E6C /* libTouchDB.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B0B7A91492B83B00A817AD /* libTouchDB.a */; };
-		3F9FBD60175D3D09005FB10E /* TD_RemoteView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3F9FBD5E175D3D09005FB10E /* TD_RemoteView.h */; };
-		3F9FBD61175D3D09005FB10E /* TD_RemoteView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F9FBD5F175D3D09005FB10E /* TD_RemoteView.m */; };
+		3F64A57517935900002F0E6C /* TD_BackedDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 3F64A573179358FF002F0E6C /* TD_BackedDatabase.h */; };
+		3F64A57617935900002F0E6C /* TD_BackedDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F64A574179358FF002F0E6C /* TD_BackedDatabase.m */; };
+		3F64A5771793655C002F0E6C /* TD_BackedDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F64A574179358FF002F0E6C /* TD_BackedDatabase.m */; };
+		3F9FBD60175D3D09005FB10E /* TD_BackedView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3F9FBD5E175D3D09005FB10E /* TD_BackedView.h */; };
+		3F9FBD61175D3D09005FB10E /* TD_BackedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F9FBD5F175D3D09005FB10E /* TD_BackedView.m */; };
 		DA023B4614BCA94C008184BB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F0745C11CD50A600E9A2AB /* Foundation.framework */; };
 		DA147C0C14BCA98A0052DA4D /* TDListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 275315DF14ACF0A20065964D /* TDListener.m */; };
 		DA147C0D14BCA98A0052DA4D /* TDHTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 2753160B14ACFC2A0065964D /* TDHTTPConnection.m */; };
@@ -805,8 +808,10 @@
 		27F1E4AA16979A0B00F0E50F /* TDJSViewCompiler_Test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDJSViewCompiler_Test.m; path = ../Source/TDJSViewCompiler_Test.m; sourceTree = "<group>"; };
 		27F87BE61558890600F0A416 /* TDGNUstep.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TDGNUstep.h; sourceTree = "<group>"; };
 		27F87BE71558890700F0A416 /* TDGNUstep.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TDGNUstep.m; sourceTree = "<group>"; };
-		3F9FBD5E175D3D09005FB10E /* TD_RemoteView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TD_RemoteView.h; sourceTree = "<group>"; };
-		3F9FBD5F175D3D09005FB10E /* TD_RemoteView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TD_RemoteView.m; sourceTree = "<group>"; };
+		3F64A573179358FF002F0E6C /* TD_BackedDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TD_BackedDatabase.h; sourceTree = "<group>"; };
+		3F64A574179358FF002F0E6C /* TD_BackedDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TD_BackedDatabase.m; sourceTree = "<group>"; };
+		3F9FBD5E175D3D09005FB10E /* TD_BackedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TD_BackedView.h; sourceTree = "<group>"; };
+		3F9FBD5F175D3D09005FB10E /* TD_BackedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TD_BackedView.m; sourceTree = "<group>"; };
 		8DD76F6C0486A84900D96B5E /* TouchDB */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TouchDB; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA023B6414BCA94C008184BB /* libTouchDBListener.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTouchDBListener.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA147C3614BCAC3B0052DA4D /* TouchDBListener.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TouchDBListener.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1039,8 +1044,10 @@
 				27C706411486BBD500F0F099 /* TD_Server.m */,
 				27731EFD1493FA3100815D67 /* TDBlobStore.h */,
 				27731EFE1493FA3100815D67 /* TDBlobStore.m */,
-				3F9FBD5E175D3D09005FB10E /* TD_RemoteView.h */,
-				3F9FBD5F175D3D09005FB10E /* TD_RemoteView.m */,
+				3F9FBD5E175D3D09005FB10E /* TD_BackedView.h */,
+				3F9FBD5F175D3D09005FB10E /* TD_BackedView.m */,
+				3F64A573179358FF002F0E6C /* TD_BackedDatabase.h */,
+				3F64A574179358FF002F0E6C /* TD_BackedDatabase.m */,
 			);
 			name = Database;
 			sourceTree = "<group>";
@@ -1496,7 +1503,7 @@
 				27821BBE14906FB60099B373 /* TouchDBPrefix.h in Headers */,
 				279EB2D11491442500E74185 /* TDInternal.h in Headers */,
 				279EB2DB1491C34300E74185 /* TDCollateJSON.h in Headers */,
-				3F64A1A41788FE6C002F0E6C /* TD_RemoteView.m in Headers */,
+				3F64A1A41788FE6C002F0E6C /* TD_BackedView.m in Headers */,
 				27B0B796149290AB00A817AD /* TDChangeTracker.h in Headers */,
 				27B0B79E1492932800A817AD /* TDBase64.h in Headers */,
 				27731EFF1493FA3100815D67 /* TDBlobStore.h in Headers */,
@@ -1551,7 +1558,8 @@
 				27ED9AA1163B01D5000C844A /* TDSocketChangeTracker.h in Headers */,
 				2776A538169F4C41006FF199 /* TDBrowserIDAuthorizer.h in Headers */,
 				2776A5D516A61FD6006FF199 /* TDPersonaAuthorizer.h in Headers */,
-				3F9FBD60175D3D09005FB10E /* TD_RemoteView.h in Headers */,
+				3F9FBD60175D3D09005FB10E /* TD_BackedView.h in Headers */,
+				3F64A57517935900002F0E6C /* TD_BackedDatabase.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2036,7 +2044,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3F64A1A31788FDFD002F0E6C /* TD_RemoteView.h in Sources */,
+				3F64A1A31788FDFD002F0E6C /* TD_BackedView.h in Sources */,
 				270B3E111489382F00E0A926 /* TD_Database.m in Sources */,
 				270B3E121489382F00E0A926 /* TD_Body.m in Sources */,
 				270B3E131489382F00E0A926 /* TD_Server.m in Sources */,
@@ -2102,7 +2110,8 @@
 				27F128B9156AC8F0008465C2 /* OAMutableURLRequest.m in Sources */,
 				270F5702156AD215000FEB8F /* OARequestParameter.m in Sources */,
 				2776A5D616A61FD6006FF199 /* TDPersonaAuthorizer.m in Sources */,
-				3F9FBD61175D3D09005FB10E /* TD_RemoteView.m in Sources */,
+				3F9FBD61175D3D09005FB10E /* TD_BackedView.m in Sources */,
+				3F64A57617935900002F0E6C /* TD_BackedDatabase.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2163,7 +2172,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3F64A56D178904CD002F0E6C /* TD_RemoteView.m in Sources */,
+				3F64A5771793655C002F0E6C /* TD_BackedDatabase.m in Sources */,
+				3F64A56D178904CD002F0E6C /* TD_BackedView.m in Sources */,
 				27B0B7CD1492B86C00A817AD /* TD_Database.m in Sources */,
 				27B0B7CE1492B86F00A817AD /* TD_View.m in Sources */,
 				27B0B7CF1492B87200A817AD /* TD_Body.m in Sources */,

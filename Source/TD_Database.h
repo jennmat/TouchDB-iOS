@@ -159,9 +159,6 @@ extern const TDChangesOptions kDefaultTDChangesOptions;
 
 - (TD_View*) viewNamed: (NSString*)name;
 
-- (TD_RemoteView*) remoteViewNamed: (NSString*) name withRemoteHost:(NSString*)host withRemoteDB:(NSString*)remoteDB withRemoteDDoc:(NSString*)ddoc withRemoteView:(NSString*)view;
-
-
 - (TD_View*) existingViewNamed: (NSString*)name;
 
 /** Returns the view with the given name. If there is none, and the name is in CouchDB

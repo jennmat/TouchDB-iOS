@@ -6,28 +6,27 @@
 //
 //
 
-#import "TD_RemoteView.h"
+#import "TD_BackedView.h"
 #import "TDRemoteRequest.h"
 #import "TD_Body.h"
 #import "TD_Database+Insertion.h"
+#import "TD_BackedDatabase.h"
 #import "FMDatabase.h"
 #import "FMDatabaseAdditions.h"
 #import "FMResultSet.h"
 
 
-@implementation TD_RemoteView
+@implementation TD_BackedView
 
 
 @synthesize remoteDB = _remoteDB;
-@synthesize remoteHost = _remoteHost;
 @synthesize remoteView = _remoteView;
 @synthesize remoteDDoc = _remoteDDoc;
 
--(id)initWithDatabase:(TD_Database *)db name:(NSString *)name withRemoteHost:(NSString *)host withRemoteDatabase:(NSString *)remoteDB withRemoteDDoc:(NSString *)remoteDDoc withRemoteView:(NSString *)remoteView
+-(id)initWithDatabase:(TD_Database *)db name:(NSString *)name withRemoteDatabase:(NSString *)remoteDB withRemoteDDoc:(NSString *)remoteDDoc withRemoteView:(NSString *)remoteView
 {
     self = [self initWithDatabase:db name:name];
     
-    _remoteHost = host;
     _remoteDB = remoteDB;
     _remoteView = remoteView;
     _remoteDDoc = remoteDDoc;
@@ -65,7 +64,7 @@ static NSString* toJSONString( id object ) {
     //dispatch_semaphore_t sema = dispatch_semaphore_create(0);
     
     
-    NSMutableURLRequest * req = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/%@/_design/%@/_view/%@", @"http", self.remoteHost, self.remoteDB, self.remoteDDoc, self.remoteView]]];
+    NSMutableURLRequest * req = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/_design/%@/_view/%@", self.remoteDB, self.remoteDDoc, self.remoteView]]];
     [req setValue: @"application/json" forHTTPHeaderField: @"Accept"];
     
     NSHTTPURLResponse* response = [NSHTTPURLResponse alloc];
@@ -204,12 +203,14 @@ static NSString* toJSONString( id object ) {
 }
 
 @class TD_Body;
+@class TD_BackedDatabase;
 
 TestCase(TD_RemoteView_Create){
     
-    TD_Database* db = [TD_Database createEmptyDBAtPath: [NSTemporaryDirectory() stringByAppendingPathComponent: @"TouchDB_RemoteViewTest.touchdb"]];
+    TD_BackedDatabase* db = [TD_BackedDatabase createEmptyDBAtPath:[NSTemporaryDirectory() stringByAppendingPathComponent: @"TouchDB_RemoteViewTest.touchdb"] withBackingDatabase:@"http://localhost:5984/properties"];
     
-    TD_RemoteView* rv = [db remoteViewNamed:@"properties-by-address" withRemoteHost:@"localhost:5984" withRemoteDB:@"properties" withRemoteDDoc:@"properties" withRemoteView:@"by-address"];
+    
+    TD_BackedView* rv = [db backedViewNamed:@"properties-by-address" withRemoteDDoc:@"properties" withRemoteView:@"by-address"];
     
     [rv updateIndex];
 
@@ -232,7 +233,7 @@ TestCase(TD_RemoteView_Create){
         TDStatus status;
         
         NSMutableDictionary* props = [readRev.properties mutableCopy];
-        props[@"status"] = @"updated!";
+        props[@"status2"] = @"updated!";
         TD_Body* doc = [TD_Body bodyWithProperties: props];
         TD_Revision* rev2 = [[TD_Revision alloc] initWithBody: doc];
         //TD_Revision* rev2Input = rev2;
@@ -257,7 +258,18 @@ TestCase(TD_RemoteView_Create){
     }
     
     
+    arr = [rv queryWithOptions:&options status:&s];
     
+    for(NSDictionary* dict in arr ){
+        NSLog(@"Key:%@", [dict objectForKey:@"key"]);
+        
+        NSString * docId = [dict objectForKey:@"id"];
+        
+        [db getDocumentWithID:docId revisionID:nil];
+        
+        
+    }
+ 
     
 }
 

@@ -14,7 +14,7 @@
 //  and limitations under the License.
 
 #import "TD_View.h"
-#import "TD_RemoteView.h"
+#import "TD_BackedView.h"
 #import "TD_Database+Insertion.h"
 #import "TDInternal.h"
 #import "Test.h"

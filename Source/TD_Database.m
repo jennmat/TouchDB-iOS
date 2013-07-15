@@ -22,7 +22,7 @@
 #import "TDPuller.h"
 #import "TDPusher.h"
 #import "TDMisc.h"
-#import "TD_RemoteView.h"
+#import "TD_BackedView.h"
 
 #import "FMDatabase.h"
 #import "FMDatabaseAdditions.h"
@@ -199,6 +199,11 @@ static BOOL removeItemIfExists(NSString* path, NSError** outError) {
                 sequence INTEGER NOT NULL REFERENCES revs(sequence) ON DELETE CASCADE, \
                 key TEXT NOT NULL COLLATE JSON, \
                 value TEXT); \
+            CREATE TABLE backed_maps (\
+                view_id INTEGER NOT NULL REFERENCES views(view_id) ON DELETE CASCADE, \
+                docid TEXT UNIQUE NOT NULL,\
+                key TEXT NOT NULL COLLATE JSON, \
+                value TEST);\
             CREATE INDEX maps_keys on maps(view_id, key COLLATE JSON); \
             CREATE TABLE attachments ( \
                 sequence INTEGER NOT NULL REFERENCES revs(sequence) ON DELETE CASCADE, \
@@ -512,34 +517,6 @@ static BOOL removeItemIfExists(NSString* path, NSError** outError) {
     return docProperties;
 }
 
-- (TD_Revision *) getStubWithNumericId:(SInt64)docNumericId docId:(NSString*)docId sequence:(SequenceNumber) seq {
-    NSMutableURLRequest * req = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/%@/%@", @"http", @"localhost:5984", @"properties", docId]]];
-    
-    [req setValue: @"application/json" forHTTPHeaderField: @"Accept"];
-    
-    NSHTTPURLResponse* response = [NSHTTPURLResponse alloc];
-    NSError* error;
-    
-    NSData* data = [NSURLConnection sendSynchronousRequest:req returningResponse:&response error:&error];
-    //NSString* revId = [[response allHeaderFields] objectForKey:@"ETag"];
-    
-    TDJSON * result = [TDJSON JSONObjectWithData: data options: 0 error: NULL];
-    NSDictionary* doc = $castIf(NSDictionary, result);
-    
-    TD_Revision* rev = [[TD_Revision alloc] initWithProperties:doc];
-    
-    /*
-    TD_Revision * result = [[TD_Revision alloc] initWithDocID: docId revID: revId deleted: NO];
-    [result setSequence:seq];
-    
-    [self expandStoredJSON:data intoRevision:result options:0];
-     */
-     
-    [self forceInsert:rev revisionHistory:nil source:[NSURL URLWithString:@"http://localhost:5984/addresses"]];
-    
-    return rev;
-}
-
 
 - (TD_Revision *) getDocumentWithID: (NSString*)docID
                        revisionID: (NSString*)revID
@@ -569,12 +546,6 @@ static BOOL removeItemIfExists(NSString* path, NSError** outError) {
         if (!revID)
             revID = [r stringForColumnIndex: 0];
     
-        if ( [revID compare:@"STUB"] == 0 ){
-            /* This is a stub document, meaning it came from a remote view and we haven't fetched it yet */
-            SInt64 docNumericId = [self getDocNumericID:docID];
-            SequenceNumber seq = [r longLongIntForColumnIndex:2];
-            return [self getStubWithNumericId:docNumericId docId:docID sequence:seq];
-        }
         
         BOOL deleted = [r boolForColumnIndex: 1];
         result = [[TD_Revision alloc] initWithDocID: docID revID: revID deleted: deleted];
@@ -935,18 +906,6 @@ const TDChangesOptions kDefaultTDChangesOptions = {UINT_MAX, 0, NO, NO, YES};
     return [self registerView: view];
 }
 
-
-- (TD_RemoteView*) remoteViewNamed: (NSString*) name withRemoteHost:(NSString*)host withRemoteDB:(NSString*)remoteDB withRemoteDDoc:(NSString*)ddoc withRemoteView:(NSString*)remoteView
-{
-
-    TD_RemoteView* view = (TD_RemoteView*)_views[name];
-    if( view ){
-        return view;
-    }
-    view = [[TD_RemoteView alloc] initWithDatabase:self name:name withRemoteHost:host withRemoteDatabase:remoteDB withRemoteDDoc:ddoc withRemoteView:remoteView];
-    
-    return (TD_RemoteView *)[self registerView:view];
-}
 
 
 - (NSArray*) allViews {
