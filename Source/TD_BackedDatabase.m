@@ -33,12 +33,12 @@
 
 
 - (TD_View*) viewNamed: (NSString*)name {
-    CAssert(false, @"Only backed views are supported by chained databases");
+    CAssert(false, @"Only backed views are supported by backed databases");
 }
 
 
 - (TD_View*) existingViewNamed: (NSString*)name {
-    CAssert(false, @"Only backed views are supported by chained databases");
+    CAssert(false, @"Only backed views are supported by backed databases");
 }
 
 
@@ -81,12 +81,14 @@
     
     /* Attempt to refresh it from the backing server */
     NSMutableURLRequest * req = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", self.backingDatabase, docID]]];
-    
+
+    [req setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
     [req setValue: @"application/json" forHTTPHeaderField: @"Accept"];
-    [req setValue: ifNoneMatch forHTTPHeaderField:@"If-None-Match"];
+    [req setValue: [NSString stringWithFormat:@"\"%@\"", ifNoneMatch] forHTTPHeaderField:@"If-None-Match"];
     NSHTTPURLResponse* response = [NSHTTPURLResponse alloc];
     NSError* error;
     
+
     NSData* data = [NSURLConnection sendSynchronousRequest:req returningResponse:&response error:&error];
     //NSString* revId = [[response allHeaderFields] objectForKey:@"ETag"];
     

@@ -503,6 +503,14 @@ NSString* const TD_DatabaseChangeNotification = @"TD_DatabaseChange";
             if (docNumericID <= 0)
                 return kTDStatusDBError;
         }
+        
+        /* Delete any stubs */
+        for(uint i=0; i<localRevs.count; i++){
+            TD_Revision* rev = localRevs[i];
+            if ( [rev.revID compare:@"STUB"] == 0 ){
+                [_fmdb executeUpdate:@"UPDATE revs SET current=0 WHERE sequence=?", @(rev.sequence)];
+            }
+        }
 
         // Validate against the latest common ancestor:
         if (_validations.count > 0) {
