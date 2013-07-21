@@ -30,14 +30,11 @@
 
 - (id) initWithBackingDatabase: (NSString*)backingDatabase withPath:(NSString*) path;
 
-- (TD_Revision *) getDocumentWithID: (NSString*)docID
-                         revisionID: (NSString*)revID
-                            options: (TDContentOptions)options
-                             status: (TDStatus*)outStatus;
-
 + (TD_BackedDatabase*) createEmptyDBAtPath: (NSString*)path withBackingDatabase:(NSString*) backingDatabase;
 
 - (TD_BackedView*) backedViewNamed: (NSString*) name withRemoteDDoc:(NSString*)ddoc withRemoteView:(NSString*)remoteView;
+
+
 @end
 
 

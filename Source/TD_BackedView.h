@@ -23,5 +23,10 @@
 
 - (id) initWithDatabase: (TD_Database*)db name: (NSString*)name withRemoteDatabase:(NSString*)remoteDB withRemoteDDoc: (NSString*) remoteDDoc withRemoteView: (NSString*) remoteView;
 
+- (NSArray*) queryWithOptions: (const TDQueryOptions*)options
+                       status: (TDStatus*)outStatus;
+
+-(NSString*) buildQueryStringForQueryOptions:(const TDQueryOptions*) options;
+
 
 @end

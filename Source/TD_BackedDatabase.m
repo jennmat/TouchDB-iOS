@@ -20,6 +20,16 @@
     
     self.backingDatabase = database;
     
+    /* Start a continuous replication to the backed databae */
+    NSURL* remote = [NSURL URLWithString: self.backingDatabase];
+    TDReplicator* pushRepl = [[TDReplicator alloc] initWithDB: self remote: remote
+                                                     push: YES continuous: NO];
+    
+    TDReplicator* pullRepl = [[TDReplicator alloc] initWithDB:self remote:remote push:NO continuous:YES];
+    
+    [pushRepl start];
+    [pullRepl start];
+    
     return self;
 }
 
@@ -64,50 +74,6 @@
 }
 
 
-
-
-- (TD_Revision *) getDocumentWithID: (NSString*)docID
-                         revisionID: (NSString*)revID
-                            options: (TDContentOptions)options
-                             status: (TDStatus*)outStatus
-{
-    TD_Revision* rev = [super getDocumentWithID:docID revisionID:revID options:options status:outStatus];
-
-    NSString* ifNoneMatch = @"";
-    
-    if ( *outStatus != kTDStatusNotFound ) {
-        ifNoneMatch = rev.revID;
-    }
-    
-    /* Attempt to refresh it from the backing server */
-    NSMutableURLRequest * req = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", self.backingDatabase, docID]]];
-
-    [req setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
-    [req setValue: @"application/json" forHTTPHeaderField: @"Accept"];
-    [req setValue: [NSString stringWithFormat:@"\"%@\"", ifNoneMatch] forHTTPHeaderField:@"If-None-Match"];
-    NSHTTPURLResponse* response = [NSHTTPURLResponse alloc];
-    NSError* error;
-    
-
-    NSData* data = [NSURLConnection sendSynchronousRequest:req returningResponse:&response error:&error];
-    //NSString* revId = [[response allHeaderFields] objectForKey:@"ETag"];
-    
-    if ( response.statusCode == 304 ){
-        *outStatus = kTDStatusNotModified;
-        return rev;
-    } else if (response.statusCode == 200) {
-        TDJSON * result = [TDJSON JSONObjectWithData: data options: 0 error: NULL];
-        NSDictionary* doc = $castIf(NSDictionary, result);
-        
-        TD_Revision* rev = [[TD_Revision alloc] initWithProperties:doc];
-        
-        [self forceInsert:rev revisionHistory:nil source:[NSURL URLWithString:self.backingDatabase]];
-        *outStatus = kTDStatusOK;
-        return rev;
-    }
-    
-    return rev;
-}
 
 
 @end

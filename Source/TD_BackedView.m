@@ -55,6 +55,38 @@ static NSString* toJSONString( id object ) {
  */
 -(TDStatus) updateIndex
 {
+    // Do nothing
+    return kTDStatusOK;
+}
+
+- (NSArray*) queryWithOptions: (const TDQueryOptions*)options
+                       status: (TDStatus*)outStatus
+{
+
+    [self updateLocalCacheForQuery:options];
+
+    return [super queryWithOptions:options status:outStatus];
+}
+
+-(NSString*) buildQueryStringForQueryOptions:(const TDQueryOptions*) options {
+    NSMutableString* str = [[NSMutableString alloc] init];
+    [str appendString:@"?"];
+    if ( options->limit != 0 ){
+        [str appendFormat:@"limit=%d&", options->limit];
+    }
+    if ( options->startKey != nil ){
+        [str appendFormat:@"startkey=%@&", toJSONString(options->startKey)];
+    }
+    if ( options->endKey != nil ){
+        [str appendFormat:@"endkey=%@&", toJSONString(options->endKey)];
+    }
+    
+    return [str substringToIndex:[str length]-1];
+    
+}
+
+-(TDStatus) updateLocalCacheForQuery: (const TDQueryOptions*) options {
+
     int viewID = self.viewID;
     if (viewID <= 0)
         return kTDStatusNotFound;
@@ -62,6 +94,7 @@ static NSString* toJSONString( id object ) {
     NSLog(@"%@", [db name]);
     
     //dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+
     
     
     NSMutableURLRequest * req = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/_design/%@/_view/%@", self.remoteDB, self.remoteDDoc, self.remoteView]]];
@@ -205,15 +238,14 @@ static NSString* toJSONString( id object ) {
 @class TD_Body;
 @class TD_BackedDatabase;
 
-TestCase(TD_RemoteView_Create){
+TestCase(TD_BackedView_Create){
     
+    /*
     TD_BackedDatabase* db = [TD_BackedDatabase createEmptyDBAtPath:[NSTemporaryDirectory() stringByAppendingPathComponent: @"TouchDB_RemoteViewTest.touchdb"] withBackingDatabase:@"http://localhost:5984/properties"];
     
     
     TD_BackedView* rv = [db backedViewNamed:@"properties-by-address" withRemoteDDoc:@"properties" withRemoteView:@"by-address"];
     
-    [rv updateIndex];
-
     TDStatus s;
     
     const TDQueryOptions options = {
@@ -239,39 +271,49 @@ TestCase(TD_RemoteView_Create){
         //TD_Revision* rev2Input = rev2;
         
         rev2 = [db putRevision: rev2 prevRevisionID: readRev.revID allowConflict: NO status: &status];
-    
-        
     }
-    
-    
-    NSURL* remote = [NSURL URLWithString: @"http://localhost:5984/properties"];
-    TDReplicator* repl = [[TDReplicator alloc] initWithDB: db remote: remote
-                                                     push: YES continuous: NO];
-    [repl start];
-    
-    CAssert(repl.running);
-    Log(@"Waiting for replicator to finish...");
-    while (repl.running || repl.savingCheckpoint) {
-        if (![[NSRunLoop currentRunLoop] runMode: NSDefaultRunLoopMode
-                                      beforeDate: [NSDate dateWithTimeIntervalSinceNow: 0.5]])
-            break;
-    }
-    
-    
-    arr = [rv queryWithOptions:&options status:&s];
-    
-    for(NSDictionary* dict in arr ){
-        NSLog(@"Key:%@", [dict objectForKey:@"key"]);
-        
-        NSString * docId = [dict objectForKey:@"id"];
-        
-        [db getDocumentWithID:docId revisionID:nil];
-        
-        
-    }
- 
+    */
     
 }
+
+TestCase(TD_BackedView_BuildQueryStringFromQueryOptions){
+    TD_BackedDatabase* db = [TD_BackedDatabase createEmptyDBAtPath:[NSTemporaryDirectory() stringByAppendingPathComponent: @"TouchDB_RemoteViewTest.touchdb"] withBackingDatabase:@"http://localhost:5984/properties"];
+    
+    
+    TD_BackedView* rv = [db backedViewNamed:@"properties-by-address" withRemoteDDoc:@"properties" withRemoteView:@"by-address"];
+
+    
+    TDQueryOptions options = kDefaultTDQueryOptions;
+  
+    options.limit = 25;
+    
+    NSString* str = [rv buildQueryStringForQueryOptions:&options];
+    
+    CAssertEqual(str, @"?limit=25");
+
+    
+    options.startKey = @"2";
+    
+    str = [rv buildQueryStringForQueryOptions:&options];
+    
+    CAssertEqual(str, @"?limit=25&startkey=\"2\"");
+
+    
+    options.endKey = @"44444";
+
+    
+    str = [rv buildQueryStringForQueryOptions:&options];
+    
+    CAssertEqual(str, @"?limit=25&startkey=\"2\"&endkey=\"44444\"");
+
+}
+
+
+
+TestCase(TD_BackedView) {
+    RequireTestCase(TD_BackedView_BuildQueryStringFromQueryOptions);
+}
+
 
 
 
