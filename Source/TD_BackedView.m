@@ -93,19 +93,42 @@ static NSString* toJSONString( id object ) {
     __block typeof(_db) db = _db;
     NSLog(@"%@", [db name]);
     
+    FMDatabase* fmdb = db.fmdb;
+    
     //dispatch_semaphore_t sema = dispatch_semaphore_create(0);
 
+    //CREATE TABLE backed_view_etags ( \
+      //view_id INTEGER NOT NULL REFERENCES views(view_id) ON DELETE CASCADE, \
+      //startkey TEXT COLLATE JSON\
+      //endkey TEXT COLLATE JSON\
+      //limit INTEGER\
+      //etag TEXT NOT NULL\
+      //);
+
+    NSString* startkeyForQuery = toJSONString(options->startKey);
+    if ( startkeyForQuery == nil ) startkeyForQuery = @"";
     
+    NSString* endkeyForQuery = toJSONString(options->endKey);
+    if ( endkeyForQuery == nil ) endkeyForQuery = @"";
     
-    NSMutableURLRequest * req = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/_design/%@/_view/%@", self.remoteDB, self.remoteDDoc, self.remoteView]]];
+    /* See if this particular view with query options was queried before,  if so I can include an etag */
+    NSString* ifNoneMatch = [fmdb stringForQuery:@"SELECT etag FROM backed_view_etags WHERE view_id=? and startkey=? and endkey=? and query_limit=?", @(viewID), startkeyForQuery, endkeyForQuery, @(options->limit)];
+    
+    NSString* queryOptions = [self buildQueryStringForQueryOptions:options];
+    
+    NSMutableURLRequest * req = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/_design/%@/_view/%@%@", self.remoteDB, self.remoteDDoc, self.remoteView, queryOptions]]];
+    [req setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
     [req setValue: @"application/json" forHTTPHeaderField: @"Accept"];
+    if ( ifNoneMatch != nil ){
+        [req setValue:ifNoneMatch forHTTPHeaderField:@"If-None-Match"];
+    }
     
     NSHTTPURLResponse* response = [NSHTTPURLResponse alloc];
     NSError* error;
     
     NSData* data = [NSURLConnection sendSynchronousRequest:req returningResponse:&response error:&error];
     
-    if ( error == nil ){
+    if ( error == nil && response.statusCode == 200 ){
 
         id result = [TDJSON JSONObjectWithData: data options: 0 error: NULL];
     
@@ -126,7 +149,6 @@ static NSString* toJSONString( id object ) {
             //}
             
             //__block unsigned inserted = 0;
-            FMDatabase* fmdb = db.fmdb;
             
             // First remove obsolete emitted results from the 'maps' table:
             //__block SequenceNumber sequence = lastSequence;
@@ -222,7 +244,21 @@ static NSString* toJSONString( id object ) {
             //    return kTDStatusDBError;
             
             status = kTDStatusOK;
+            
+            
+            /* Record the etag received */
+            NSString* etag = [[response allHeaderFields] valueForKey:@"Etag"];
         
+            if ( ifNoneMatch != nil ){
+                /* Update the etag in place */
+                [fmdb executeUpdate:@"UPDATE backed_view_etags SET etag=? WHERE view_id=? and startkey=? and endkey=? and query_limit=?", etag, viewID, toJSONString(options->startKey), toJSONString(options->endKey), options->limit];
+            } else {
+                /* First time, insert a row instead */
+                [fmdb executeUpdate:@"INSERT INTO backed_view_etags VALUES (?, ?, ?, ?, ?)", @(viewID), endkeyForQuery, startkeyForQuery, @(options->limit), etag];
+                
+            }
+            
+            
         } @finally {
             [r close];
             if (status >= kTDStatusBadRequest)
@@ -240,8 +276,8 @@ static NSString* toJSONString( id object ) {
 
 TestCase(TD_BackedView_Create){
     
-    /*
-    TD_BackedDatabase* db = [TD_BackedDatabase createEmptyDBAtPath:[NSTemporaryDirectory() stringByAppendingPathComponent: @"TouchDB_RemoteViewTest.touchdb"] withBackingDatabase:@"http://localhost:5984/properties"];
+    
+    TD_BackedDatabase* db = [TD_BackedDatabase createEmptyDBAtPath:[NSTemporaryDirectory() stringByAppendingPathComponent: @"TouchDB_BackedViewCreate.touchdb"] withBackingDatabase:@"http://localhost:5984/properties"];
     
     
     TD_BackedView* rv = [db backedViewNamed:@"properties-by-address" withRemoteDDoc:@"properties" withRemoteView:@"by-address"];
@@ -256,10 +292,12 @@ TestCase(TD_BackedView_Create){
     
     NSArray* arr = [rv queryWithOptions:&options status:&s];
     
+    arr = [rv queryWithOptions:&options status:&s];
+    
     for(NSDictionary* dict in arr ){
         NSLog(@"Key:%@", [dict objectForKey:@"key"]);
     
-        NSString * docId = [dict objectForKey:@"id"];
+        /*NSString * docId = [dict objectForKey:@"id"];
         
         TD_Revision* readRev = [db getDocumentWithID:docId revisionID:nil];
         TDStatus status;
@@ -271,8 +309,9 @@ TestCase(TD_BackedView_Create){
         //TD_Revision* rev2Input = rev2;
         
         rev2 = [db putRevision: rev2 prevRevisionID: readRev.revID allowConflict: NO status: &status];
+            */
     }
-    */
+    
     
 }
 
@@ -311,6 +350,7 @@ TestCase(TD_BackedView_BuildQueryStringFromQueryOptions){
 
 
 TestCase(TD_BackedView) {
+    RequireTestCase(TD_BackedView_Create);
     RequireTestCase(TD_BackedView_BuildQueryStringFromQueryOptions);
 }
 

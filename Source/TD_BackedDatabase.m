@@ -19,28 +19,31 @@
     self  = [self initWithPath:path];
     
     self.backingDatabase = database;
-    
-    /* Start a continuous replication to the backed databae */
-    NSURL* remote = [NSURL URLWithString: self.backingDatabase];
-    TDReplicator* pushRepl = [[TDReplicator alloc] initWithDB: self remote: remote
-                                                     push: YES continuous: NO];
-    
-    TDReplicator* pullRepl = [[TDReplicator alloc] initWithDB:self remote:remote push:NO continuous:YES];
-    
-    [pushRepl start];
-    [pullRepl start];
-    
+    [self startReplication];
     return self;
 }
+
+
 
 + (TD_Database*) createEmptyDBAtPath: (NSString*)path withBackingDatabase:(NSString *)backingDatabase
 {
     TD_BackedDatabase* db = (TD_BackedDatabase *)[self createEmptyDBAtPath:path];
     db.backingDatabase = backingDatabase;
-    
+    [db startReplication];
     return db;
 }
 
+-(void) startReplication {
+    /* Start a continuous replication to the backed databae */
+    NSURL* remote = [NSURL URLWithString: self.backingDatabase];
+    pushRepl = [[TDReplicator alloc] initWithDB: self remote: remote
+                                           push: YES continuous: NO];
+    
+    pullRepl = [[TDReplicator alloc] initWithDB:self remote:remote push:NO continuous:YES];
+    
+    [pushRepl start];
+    [pullRepl start];
+}
 
 - (TD_View*) viewNamed: (NSString*)name {
     CAssert(false, @"Only backed views are supported by backed databases");

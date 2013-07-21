@@ -23,6 +23,8 @@
 @interface TD_BackedDatabase : TD_Database {
     @private
     NSMutableDictionary* _remoteViews;
+    TDReplicator* pushRepl;
+    TDReplicator* pullRepl;
 }
 
 @property NSString* backingDatabase;  /* This should be the full path to the backing database, including scheme host and port and database name */
@@ -34,6 +36,7 @@
 
 - (TD_BackedView*) backedViewNamed: (NSString*) name withRemoteDDoc:(NSString*)ddoc withRemoteView:(NSString*)remoteView;
 
+-(void)startReplication;
 
 @end
 

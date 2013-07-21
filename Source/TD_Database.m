@@ -199,12 +199,14 @@ static BOOL removeItemIfExists(NSString* path, NSError** outError) {
                 sequence INTEGER NOT NULL REFERENCES revs(sequence) ON DELETE CASCADE, \
                 key TEXT NOT NULL COLLATE JSON, \
                 value TEXT); \
-            CREATE TABLE backed_maps (\
-                view_id INTEGER NOT NULL REFERENCES views(view_id) ON DELETE CASCADE, \
-                docid TEXT UNIQUE NOT NULL,\
-                key TEXT NOT NULL COLLATE JSON, \
-                value TEST);\
             CREATE INDEX maps_keys on maps(view_id, key COLLATE JSON); \
+            CREATE TABLE backed_view_etags ( \
+                view_id INTEGER NOT NULL REFERENCES views(view_id) ON DELETE CASCADE, \
+                startkey TEXT COLLATE JSON,\
+                endkey TEXT COLLATE JSON,\
+                query_limit INTEGER,\
+                etag TEXT NOT NULL\
+            ); \
             CREATE TABLE attachments ( \
                 sequence INTEGER NOT NULL REFERENCES revs(sequence) ON DELETE CASCADE, \
                 filename TEXT NOT NULL, \
