@@ -90,10 +90,8 @@ static NSString* toJSONString( id object ) {
     int viewID = self.viewID;
     if (viewID <= 0)
         return kTDStatusNotFound;
-    __block typeof(_db) db = _db;
-    NSLog(@"%@", [db name]);
     
-    FMDatabase* fmdb = db.fmdb;
+    FMDatabase* fmdb = _db.fmdb;
     
     //dispatch_semaphore_t sema = dispatch_semaphore_create(0);
 
@@ -301,7 +299,6 @@ TestCase(TD_BackedView_Create){
         
         TD_Revision* readRev = [db getDocumentWithID:docId revisionID:nil];
         TDStatus status;
-        
         NSMutableDictionary* props = [readRev.properties mutableCopy];
         props[@"status2"] = @"updated!";
         TD_Body* doc = [TD_Body bodyWithProperties: props];
