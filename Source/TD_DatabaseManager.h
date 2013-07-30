@@ -38,6 +38,7 @@ extern const TD_DatabaseManagerOptions kTD_DatabaseManagerDefaultOptions;
 @property (readonly) NSString* directory;
 
 - (TD_Database*) databaseNamed: (NSString*)name;
+- (TD_Database*) databaseNamed: (NSString*)name withBackingDatabase:(NSString*) backingDatabase;
 - (TD_Database*) existingDatabaseNamed: (NSString*)name;
 
 - (BOOL) deleteDatabaseNamed: (NSString*)name;

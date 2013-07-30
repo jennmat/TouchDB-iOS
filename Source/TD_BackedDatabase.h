@@ -34,8 +34,6 @@
 
 + (TD_BackedDatabase*) createEmptyDBAtPath: (NSString*)path withBackingDatabase:(NSString*) backingDatabase;
 
-- (TD_BackedView*) backedViewNamed: (NSString*) name withRemoteDDoc:(NSString*)ddoc withRemoteView:(NSString*)remoteView;
-
 -(void)startReplication;
 
 @end

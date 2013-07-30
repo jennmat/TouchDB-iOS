@@ -46,28 +46,18 @@
 }
 
 - (TD_View*) viewNamed: (NSString*)name {
-    CAssert(false, @"Only backed views are supported by backed databases");
-}
-
-
-- (TD_View*) existingViewNamed: (NSString*)name {
-    CAssert(false, @"Only backed views are supported by backed databases");
-}
-
-
-- (TD_BackedView*) registerView: (TD_BackedView*)view {
-    if (!view)
+    NSArray* parts = [name componentsSeparatedByString:@"/"];
+    if ( parts.count != 2 ){
         return nil;
-    if (!_remoteViews)
-        _remoteViews = [[NSMutableDictionary alloc] init];
-    _remoteViews[view.name] = view;
-    return view;
-}
-
-
-- (TD_BackedView*) backedViewNamed: (NSString*) name withRemoteDDoc:(NSString*)ddoc withRemoteView:(NSString*)remoteView
-{
-    TD_BackedView* view = (TD_BackedView*)_remoteViews[name];
+    }
+    
+    NSString* ddoc = parts[0];
+    NSString* remoteView = parts[1];
+    
+    NSLog(@"Looking for view named %@ %@", ddoc, remoteView );
+    
+    
+    TD_BackedView* view = (TD_BackedView*)_views[name];
     if( view ){
         return view;
     }

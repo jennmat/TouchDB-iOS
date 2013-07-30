@@ -67,13 +67,16 @@ extern const TDChangesOptions kDefaultTDChangesOptions;
     BOOL _readOnly;
     BOOL _open;
     int _transactionLevel;
-    NSMutableDictionary* _views;
     NSMutableDictionary* _validations;
     NSMutableDictionary* _filters;
     TDBlobStore* _attachments;
     NSMutableDictionary* _pendingAttachmentsByDigest;
     NSMutableArray* _activeReplicators;
-}    
+    
+    @protected
+    NSMutableDictionary* _views;
+    
+}
         
 - (id) initWithPath: (NSString*)path;
 - (BOOL) open;
@@ -166,6 +169,8 @@ extern const TDChangesOptions kDefaultTDChangesOptions;
     design document and compile them with the TDViewCompiler. */
 - (TD_View*) compileViewNamed: (NSString*)name status: (TDStatus*)outStatus;
 
+- (TD_View*) registerView: (TD_View*)view;
+    
 @property (readonly) NSArray* allViews;
 
 - (TD_RevisionList*) changesSinceSequence: (SequenceNumber)lastSequence

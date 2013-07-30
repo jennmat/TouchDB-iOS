@@ -15,6 +15,7 @@
 
 #import "TD_DatabaseManager.h"
 #import "TD_Database.h"
+#import "TD_BackedDatabase.h"
 #import "TDOAuth1Authorizer.h"
 #import "TDPersonaAuthorizer.h"
 #import "TDPusher.h"
@@ -116,7 +117,7 @@ static NSCharacterSet* kIllegalNameChars;
 }
 
 
-- (TD_Database*) databaseNamed: (NSString*)name create: (BOOL)create {
+- (TD_Database*) databaseNamed: (NSString*)name create: (BOOL)create withBackingDatabase:(NSString*)backingDatabase {
     if (_options.readOnly)
         create = NO;
     TD_Database* db = _databases[name];
@@ -124,7 +125,11 @@ static NSCharacterSet* kIllegalNameChars;
         NSString* path = [self pathForName: name];
         if (!path)
             return nil;
-        db = [[TD_Database alloc] initWithPath: path];
+        if ( backingDatabase != nil ){
+            db = [[TD_BackedDatabase alloc] initWithBackingDatabase:backingDatabase withPath:path];
+        } else {
+            db = [[TD_Database alloc] initWithPath: path];
+        }
         db.readOnly = _options.readOnly;
         if (!create && !db.exists) {
             return nil;
@@ -137,12 +142,17 @@ static NSCharacterSet* kIllegalNameChars;
 
 
 - (TD_Database*) databaseNamed: (NSString*)name {
-    return [self databaseNamed: name create: YES];
+    return [self databaseNamed: name create: YES withBackingDatabase:nil];
+}
+
+-(TD_Database *) databaseNamed:(NSString *)name withBackingDatabase:(NSString *)backingDatabase
+{
+    return [self databaseNamed:name  create: YES withBackingDatabase:backingDatabase];
 }
 
 
 - (TD_Database*) existingDatabaseNamed: (NSString*)name {
-    TD_Database* db = [self databaseNamed: name create: NO];
+    TD_Database* db = [self databaseNamed: name create: NO withBackingDatabase:nil];
     if (db && ![db open])
         db = nil;
     return db;

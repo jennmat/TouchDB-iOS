@@ -320,6 +320,10 @@ static NSArray* splitPath( NSURL* url ) {
         } else if (!validName) {
             return kTDStatusBadID;
         } else {
+            id backingDB = [_request.allHTTPHeaderFields objectForKey:@"X-Backing-Database"];
+            if ( backingDB != nil ){
+                _db = [_dbManager databaseNamed:dbName withBackingDatabase:backingDB];
+            }
             _db = [_dbManager databaseNamed: dbName];
             if (!_db)
                 return kTDStatusNotFound;
