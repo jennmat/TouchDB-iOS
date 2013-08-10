@@ -45,6 +45,21 @@
     [pullRepl start];
 }
 
+
+- (TD_View*) registerBackedView: (TD_BackedView*)view {
+    if (!view)
+        return nil;
+    if (!_backedViews)
+        _backedViews = [[NSMutableDictionary alloc] init];
+    _backedViews[view.name] = view;
+    return view;
+}
+
+
+-(TD_View*) existingViewNamed:(NSString *)name {
+    return [self viewNamed:name];
+}
+
 - (TD_View*) viewNamed: (NSString*)name {
     NSArray* parts = [name componentsSeparatedByString:@"/"];
     if ( parts.count != 2 ){
@@ -54,16 +69,16 @@
     NSString* ddoc = parts[0];
     NSString* remoteView = parts[1];
     
-    NSLog(@"Looking for view named %@ %@", ddoc, remoteView );
+    NSLog(@"Looking for backed view named %@ %@", ddoc, remoteView );
     
     
-    TD_BackedView* view = (TD_BackedView*)_views[name];
+    TD_BackedView* view = (TD_BackedView*)_backedViews[name];
     if( view ){
         return view;
     }
     view = [[TD_BackedView alloc] initWithDatabase:self name:name withRemoteDatabase:self.backingDatabase withRemoteDDoc:ddoc withRemoteView:remoteView];
-    
-    return [self registerView:view];
+    NSLog(@"Registering a backed view for %@ %@", ddoc, remoteView);
+    return [self registerBackedView:view];
 }
 
 

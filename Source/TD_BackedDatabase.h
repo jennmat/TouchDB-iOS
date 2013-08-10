@@ -22,7 +22,7 @@
 
 @interface TD_BackedDatabase : TD_Database {
     @private
-    NSMutableDictionary* _remoteViews;
+    NSMutableDictionary* _backedViews;
     TDReplicator* pushRepl;
     TDReplicator* pullRepl;
 }

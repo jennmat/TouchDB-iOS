@@ -72,8 +72,6 @@ extern const TDChangesOptions kDefaultTDChangesOptions;
     TDBlobStore* _attachments;
     NSMutableDictionary* _pendingAttachmentsByDigest;
     NSMutableArray* _activeReplicators;
-    
-    @protected
     NSMutableDictionary* _views;
     
 }

@@ -891,6 +891,7 @@ const TDChangesOptions kDefaultTDChangesOptions = {UINT_MAX, 0, NO, NO, YES};
 
 
 - (TD_View*) viewNamed: (NSString*)name {
+    NSLog(@"Looking for a traditional view");
     TD_View* view = _views[name];
     if (view)
         return view;
@@ -899,6 +900,7 @@ const TDChangesOptions kDefaultTDChangesOptions = {UINT_MAX, 0, NO, NO, YES};
 
 
 - (TD_View*) existingViewNamed: (NSString*)name {
+    NSLog(@"Looking for an existing traditional view");
     TD_View* view = _views[name];
     if (view)
         return view;

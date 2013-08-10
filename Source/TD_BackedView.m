@@ -59,6 +59,11 @@ static NSString* toJSONString( id object ) {
     return kTDStatusOK;
 }
 
+- (BOOL) compileFromProperties: (NSDictionary*)viewProps {
+    // DO Nothing
+    return YES;
+}
+
 - (NSArray*) queryWithOptions: (const TDQueryOptions*)options
                        status: (TDStatus*)outStatus
 {
@@ -71,8 +76,8 @@ static NSString* toJSONString( id object ) {
 -(NSString*) buildQueryStringForQueryOptions:(const TDQueryOptions*) options {
     NSMutableString* str = [[NSMutableString alloc] init];
     [str appendString:@"?"];
-    if ( options->limit > 0 ){
-        [str appendFormat:@"limit=25&"];
+    if ( options->limit != UINT_MAX ){
+        [str appendFormat:@"limit=%d&", options->limit];
     }
     if ( options->startKey != nil ){
         [str appendFormat:@"startkey=%@&", toJSONString(options->startKey)];
@@ -115,6 +120,7 @@ static NSString* toJSONString( id object ) {
     /* See if this particular view with query options was queried before,  if so I can include an etag */
     NSString* ifNoneMatch = [fmdb stringForQuery:@"SELECT etag FROM backed_view_etags WHERE view_id=? and startkey=? and endkey=? and query_limit=?", @(viewID), startkeyForQuery, endkeyForQuery, @(options->limit)];
     
+    NSLog(@"Found ifNoneMatch: %@", ifNoneMatch);
     NSString* queryOptions = [self buildQueryStringForQueryOptions:options];
     
     NSString* url = [NSString stringWithFormat:@"%@/_design/%@/_view/%@%@", self.remoteDB, self.remoteDDoc, self.remoteView, queryOptions];
@@ -270,10 +276,13 @@ static NSString* toJSONString( id object ) {
             NSString* etag = [[response allHeaderFields] valueForKey:@"Etag"];
         
             if ( ifNoneMatch != nil ){
+                NSLog(@"Updating etag to %@", etag);
                 /* Update the etag in place */
                 [fmdb executeUpdate:@"UPDATE backed_view_etags SET etag=? WHERE view_id=? and startkey=? and endkey=? and query_limit=?", etag, @(viewID), toJSONString(options->startKey), toJSONString(options->endKey), @(options->limit)];
             } else {
                 /* First time, insert a row instead */
+                NSLog(@"Inserting a row for if none match: %@", etag);
+                
                 [fmdb executeUpdate:@"INSERT INTO backed_view_etags VALUES (?, ?, ?, ?, ?)", @(viewID), endkeyForQuery, startkeyForQuery, @(options->limit), etag];
                 
             }
@@ -300,12 +309,11 @@ TestCase(TD_BackedView_Create){
     TD_BackedDatabase* db = [TD_BackedDatabase createEmptyDBAtPath:[NSTemporaryDirectory() stringByAppendingPathComponent: @"TouchDB_BackedViewCreate.touchdb"] withBackingDatabase:@"http://localhost:5984/properties"];
     
     
-    TD_View* rv = [db viewNamed:@"properties/properties-by-address"];
+    TD_View* rv = [db viewNamed:@"properties/by-address"];
     
     TDStatus s;
     
     const TDQueryOptions options = {
-        .limit = 25
         // everything else will default to nil/0/NO
     };
 
